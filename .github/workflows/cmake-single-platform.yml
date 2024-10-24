@@ -21,7 +21,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install CMake
-      uses: lukka/get-cmake@v3  # Ensures CMake is installed on the Windows runner
+      uses: lukka/get-cmake@v3.21.3  # Using the specific version 3.21.3 for CMake
 
     - name: Install Dependencies (GLFW, IMGUI)
       run: git submodule update --init --recursive  # Ensures submodules (GLFW, IMGUI) are fetched
