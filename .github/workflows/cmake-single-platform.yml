@@ -1,11 +1,13 @@
 # This starter workflow is for a CMake project running on Windows.
-# For multi-platform, refer to the original CMake multi-platform workflow.
+# Triggered on push or pull requests to the master branch.
 
 name: ENGINE BUILD
 
 on:
-  schedule:
-    - cron: "*/5 * * * *"  # Runs the workflow every 5 minutes
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -21,17 +23,20 @@ jobs:
     - name: Install CMake
       uses: lukka/get-cmake@v3  # Ensures CMake is installed on the Windows runner
 
+    - name: Install Dependencies (GLFW, IMGUI)
+      run: git submodule update --init --recursive  # Ensures submodules (GLFW, IMGUI) are fetched
+
     - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory.
+      # Configure CMake in a 'build' subdirectory with Visual Studio generator.
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G "Visual Studio 17 2022" -A x64
 
     - name: Build
-      # Build your program with the given configuration
+      # Build your program with the given configuration.
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: Test
       working-directory: ${{github.workspace}}/build
-      # Execute tests defined by the CMake configuration
+      # Execute tests defined by the CMake configuration.
       run: ctest -C ${{env.BUILD_TYPE}}
 
     - name: Upload build artifacts
