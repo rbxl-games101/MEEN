@@ -1,0 +1,43 @@
+# This starter workflow is for a CMake project running on Windows.
+# For multi-platform, refer to the original CMake multi-platform workflow.
+
+name: ENGINE BUILD
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: windows-latest  # Using Windows runner
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install CMake
+      uses: lukka/get-cmake@v3  # Ensures CMake is installed on the Windows runner
+
+    - name: Configure CMake
+      # Configure CMake in a 'build' subdirectory.
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G "Visual Studio 17 2022" -A x64
+
+    - name: Build
+      # Build your program with the given configuration
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      # Execute tests defined by the CMake configuration
+      run: ctest -C ${{env.BUILD_TYPE}}
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-artifacts
+        path: ${{github.workspace}}/build  # Upload everything in the 'build' folder
