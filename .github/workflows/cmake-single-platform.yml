@@ -21,7 +21,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install CMake
-      uses: lukka/get-cmake@v3  # Using the latest available version of CMake
+      uses: jwlawson/actions-setup-cmake@v1.0.0  # Use a stable version to install CMake
 
     - name: Install Dependencies (GLFW, IMGUI)
       run: git submodule update --init --recursive  # Ensures submodules (GLFW, IMGUI) are fetched
