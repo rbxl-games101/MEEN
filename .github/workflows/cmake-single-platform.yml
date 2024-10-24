@@ -4,10 +4,8 @@
 name: ENGINE BUILD
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  schedule:
+    - cron: "*/5 * * * *"  # Runs the workflow every 5 minutes
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
